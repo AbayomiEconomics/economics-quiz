@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tricky Economics Quiz</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
+    .container { max-width: 900px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; }
+    h2 { text-align: center; }
+    #timer { font-weight: bold; color: red; text-align: right; }
+    .question { margin-bottom: 15px; }
+    .options label { display: block; }
+    #result { margin-top: 20px; font-size: 20px; text-align: center; }
+    button { padding: 10px 20px; font-size: 16px; margin-top: 15px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Tricky Economics Quiz (50 Questions)</h2>
+    <div id="timer">Time Left: 30:00</div>
+    <form id="quizForm"></form>
+    <button onclick="submitQuiz()">Submit</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const questions = [
+      // --- Add 50 tricky macro/micro economics questions here ---
+      {q: "1. Which of the following is NOT a characteristic of a perfectly competitive market?", options: ["Homogeneous products", "Free entry and exit", "Firms are price makers", "Large number of buyers and sellers"], answer: "Firms are price makers"},
+      {q: "2. Which of the following is a leakage in the circular flow of income?", options: ["Investment", "Government spending", "Savings", "Exports"], answer: "Savings"},
+      {q: "3. Which curve is U-shaped due to the law of variable proportions?", options: ["Marginal Revenue", "Average Fixed Cost", "Average Total Cost", "Average Product"], answer: "Average Total Cost"},
+      {q: "4. The Phillips curve shows the relationship between:", options: ["Inflation and employment", "Inflation and unemployment", "Demand and supply", "GDP and inflation"], answer: "Inflation and unemployment"},
+      {q: "5. Which of the following can cause cost-push inflation?", options: ["Decrease in money supply", "Decrease in aggregate demand", "Increase in production costs", "Increase in productivity"], answer: "Increase in production costs"},
+      {q: "6. Which policy is used to correct a balance of payments deficit?", options: ["Deflationary fiscal policy", "Expansionary monetary policy", "Protectionism", "Increase in subsidies"], answer: "Protectionism"},
+      {q: "7. What happens to total utility when marginal utility becomes negative?", options: ["Increases", "Constant", "Decreases", "Cannot be determined"], answer: "Decreases"},
+      {q: "8. If a product has many substitutes, its demand is likely to be:", options: ["Perfectly inelastic", "Elastic", "Unit elastic", "Inelastic"], answer: "Elastic"},
+      {q: "9. Which of these would NOT shift the demand curve for good X?", options: ["Change in the price of X", "Change in taste for X", "Change in income of buyers", "Change in price of substitutes"], answer: "Change in the price of X"},
+      {q: "10. Who proposed the concept of 'Invisible Hand'?", options: ["Adam Smith", "Keynes", "Ricardo", "Karl Marx"], answer: "Adam Smith"},
+      {q: "11. Which of these is a merit good?", options: ["Tobacco", "Alcohol", "Education", "Lottery"], answer: "Education"},
+      {q: "12. Which sector contributes most to GDP in developed economies?", options: ["Primary", "Secondary", "Tertiary", "Quaternary"], answer: "Tertiary"},
+      {q: "13. In the long run, all costs become:", options: ["Fixed", "Variable", "Average", "Marginal"], answer: "Variable"},
+      {q: "14. Balance of trade refers to:", options: ["Exports minus imports of goods", "Exports minus imports of services", "Net capital inflow", "Difference in foreign reserves"], answer: "Exports minus imports of goods"},
+      {q: "15. Increase in national income without improvement in living standards is called:", options: ["Nominal growth", "Real growth", "Economic development", "Stagnation"], answer: "Nominal growth"},
+      {q: "16. If MPC = 0.75, what is the multiplier?", options: ["2", "4", "5", "3"], answer: "4"},
+      {q: "17. Depreciation of a country’s currency makes imports:", options: ["Cheaper", "More expensive", "No effect", "Subsidized"], answer: "More expensive"},
+      {q: "18. Which of these is NOT part of Gross Domestic Product?", options: ["Consumer spending", "Investment", "Government spending", "Transfer payments"], answer: "Transfer payments"},
+      {q: "19. Giffen goods violate which law?", options: ["Law of demand", "Law of diminishing returns", "Law of supply", "Law of marginal utility"], answer: "Law of demand"},
+      {q: "20. Which type of unemployment results from changes in seasons?", options: ["Structural", "Seasonal", "Frictional", "Cyclical"], answer: "Seasonal"},
+      {q: "21. National debt is mainly associated with:", options: ["Households", "Private sector", "Government", "Firms"], answer: "Government"},
+      {q: "22. An increase in aggregate demand will likely cause:", options: ["Deflation", "Recession", "Inflation", "Stagnation"], answer: "Inflation"},
+      {q: "23. Who benefits most from unexpected inflation?", options: ["Fixed income earners", "Debtors", "Creditors", "Savers"], answer: "Debtors"},
+      {q: "24. Cross elasticity of demand between two substitute goods is:", options: ["Positive", "Negative", "Zero", "Unrelated"], answer: "Positive"},
+      {q: "25. What is meant by derived demand?", options: ["Demand dependent on income", "Demand for goods used to produce other goods", "Demand for luxurious goods", "Excess demand"], answer: "Demand for goods used to produce other goods"},
+      {q: "26. The concept of ‘Comparative Advantage’ is credited to:", options: ["Adam Smith", "David Ricardo", "J. M. Keynes", "Samuelson"], answer: "David Ricardo"},
+      {q: "27. Dumping refers to:", options: ["Importing cheaper goods", "Selling goods abroad below cost", "Exporting only luxury goods", "Producing defective goods"], answer: "Selling goods abroad below cost"},
+      {q: "28. Which of the following goods is likely to have perfectly inelastic demand?", options: ["Salt", "Luxury cars", "Insulin for diabetics", "Clothes"], answer: "Insulin for diabetics"},
+      {q: "29. Inflation is measured by:", options: ["Consumer Price Index", "Balance of payments", "Exchange rates", "Interest rates"], answer: "Consumer Price Index"},
+      {q: "30. Which policy reduces inflation by raising interest rates?", options: ["Fiscal policy", "Monetary policy", "Trade policy", "Wage policy"], answer: "Monetary policy"},
+      {q: "31. Which cost is irrelevant in future decision making?", options: ["Marginal cost", "Opportunity cost", "Sunk cost", "Average cost"], answer: "Sunk cost"},
+      {q: "32. What is the term for income distribution favoring the rich?", options: ["Progressive distribution", "Proportional distribution", "Regressive distribution", "Unequal distribution"], answer: "Unequal distribution"},
+      {q: "33. Which tax system places more burden on the rich?", options: ["Regressive", "Proportional", "Progressive", "Indirect"], answer: "Progressive"},
+      {q: "34. A monopolist will set price where:", options: ["MC = MR", "AR = MR", "TR = TC", "AC = AR"], answer: "MC = MR"},
+      {q: "35. The portion of income spent is known as:", options: ["MPC", "MPS", "APC", "APS"], answer: "APC"},
+      {q: "36. The marginal propensity to consume plus marginal propensity to save equals:", options: ["0", "1", "2", "Infinity"], answer: "1"},
+      {q: "37. The IS curve represents:", options: ["Equilibrium in goods market", "Equilibrium in money market", "Inflation-Unemployment relation", "Budget deficit"], answer: "Equilibrium in goods market"},
+      {q: "38. If demand is perfectly elastic, the demand curve is:", options: ["Vertical", "Horizontal", "Upward sloping", "Kinked"], answer: "Horizontal"},
+      {q: "39. Which function is NOT performed by a central bank?", options: ["Issuing currency", "Acting as lender of last resort", "Offering retail banking", "Controlling inflation"], answer: "Offering retail banking"},
+      {q: "40. In which market structure is product differentiation significant?", options: ["Perfect competition", "Monopolistic competition", "Oligopoly", "Monopoly"], answer: "Monopolistic competition"},
+      {q: "41. When marginal product starts falling, total product is:", options: ["Increasing at a decreasing rate", "Constant", "Decreasing", "Increasing at increasing rate"], answer: "Increasing at a decreasing rate"},
+      {q: "42. Quota is an example of:", options: ["Fiscal policy", "Monetary policy", "Trade restriction", "Exchange control"], answer: "Trade restriction"},
+      {q: "43. Which of these is NOT included in the expenditure approach to GDP?", options: ["Consumption", "Investment", "Government expenditure", "Imports"], answer: "Imports"},
+      {q: "44. The slope of the budget line is equal to:", options: ["Income", "Price ratio of two goods", "Total expenditure", "Saving"], answer: "Price ratio of two goods"},
+      {q: "45. Which index is commonly used to measure inflation?", options: ["Wholesale Price Index", "Consumer Price Index", "Retail Index", "GDP Deflator"], answer: "Consumer Price Index"},
+      {q: "46. Which organization promotes free trade globally?", options: ["UNESCO", "WTO", "IMF", "OPEC"], answer: "WTO"},
+      {q: "47. What happens when aggregate demand falls short of aggregate supply?", options: ["Inflation", "Deflationary gap", "Full employment", "Trade surplus"], answer: "Deflationary gap"},
+      {q: "48. A situation where output cannot increase with more input is known as:", options: ["Constant returns", "Diminishing returns", "Negative returns", "Saturation point"], answer: "Saturation point"},
+      {q: "49. Currency devaluation is used to:", options: ["Discourage exports", "Make imports cheaper", "Boost exports", "Lower inflation"], answer: "Boost exports"},
+      {q: "50. Expansionary fiscal policy includes:", options: ["Raising taxes", "Increasing government spending", "Reducing subsidies", "Selling treasury bills"], answer: "Increasing government spending"}
+    ];
+
+    const form = document.getElementById("quizForm");
+
+    questions.forEach((q, i) => {
+      const div = document.createElement("div");
+      div.className = "question";
+      div.innerHTML = `<p>${q.q}</p>`;
+      q.options.forEach(opt => {
+        div.innerHTML += `
+          <label><input type="radio" name="q${i}" value="${opt}"> ${opt}</label>
+        `;
+      });
+      form.appendChild(div);
+    });
+
+    function submitQuiz() {
+      let score = 0;
+      questions.forEach((q, i) => {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (selected && selected.value === q.answer) {
+          score++;
+        }
+      });
+      document.getElementById("result").textContent = `You scored ${score} out of ${questions.length}`;
+      clearInterval(timerInterval);
+      document.querySelector("button").disabled = true;
+    }
+
+    let timeLeft = 1800;
+    const timerDisplay = document.getElementById("timer");
+
+    function updateTimer() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      timerDisplay.textContent = `Time Left: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+      if (timeLeft <= 0) submitQuiz();
+      timeLeft--;
+    }
+
+    const timerInterval = setInterval(updateTimer, 1000);
+  </script>
+</body>
+</html>
